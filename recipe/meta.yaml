@@ -1,0 +1,60 @@
+{% set name = "numba-dppy" %}
+{% set version = "0.14.4" %}
+{% set sha256 = "e4618c331a2d6d2f570aa810727950a1197fcecc580dff6fdd73d775d637ee4a" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/IntelPython/{{ name }}/archive/{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+
+build:
+  number: 0
+  script_env:
+    - ONEAPI_ROOT
+
+requirements:
+  build:
+      - {{ compiler('cxx') }}
+      - {{ compiler('dpcpp') }}
+  host:
+      - python
+      - setuptools
+      - cython
+      - numba 0.53*
+      - dpctl 0.8.*
+      - dpnp >=0.6*,<0.7*  # [linux]
+      - wheel
+  run:
+      - python
+      - numba 0.53*
+      - dpctl 0.8.*
+      - spirv-tools
+      - llvm-spirv
+      - llvmdev
+      - dpnp >=0.6*,<0.7*  # [linux]
+
+test:
+  requires:
+      - pytest
+
+about:
+  home: https://github.com/IntelPython/numba-dppy
+  summary: "Numba extension for Intel CPU and GPU backend"
+  license: Apache-2.0
+  license_file: LICENSE
+  description: |
+      <strong>LEGAL NOTICE: Use of this software package is subject to the
+      software license agreement (as set forth above, in the license section of
+      the installed Conda package and/or the README file) and all notices,
+      disclaimers or license terms for third party or open source software
+      included in or with the software.</strong>
+      <br/><br/>
+      EULA: <a href="https://opensource.org/licenses/Apache-2.0" target="_blank">Apache-2.0</a>
+      <br/><br/>
+
+extra:
+  recipe-maintainers:
+      - PokhodenkoSA
