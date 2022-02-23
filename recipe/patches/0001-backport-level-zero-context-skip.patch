@@ -1,0 +1,58 @@
+From ec3e50c42890cde4996116d6eb7a86879cfb2d88 Mon Sep 17 00:00:00 2001
+From: "elena.totmenina" <elena.totmenina@intel.com>
+Date: Mon, 29 Nov 2021 18:51:56 +0300
+Subject: [PATCH 1/2] Fix
+
+---
+ numba_dppy/tests/test_with_context.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/numba_dppy/tests/test_with_context.py b/numba_dppy/tests/test_with_context.py
+index 7300eb8a6..3068a7890 100644
+--- a/numba_dppy/tests/test_with_context.py
++++ b/numba_dppy/tests/test_with_context.py
+@@ -30,10 +30,13 @@
+ skip_no_cpu = pytest.mark.skipif(
+     not _helper.has_cpu_queues(), reason="No CPU platforms available"
+ )
+-
++skip_no_level_zero = pytest.mark.skipif(
++    not _helper.has_gpu_queues("level_zero"),
++    reason="No level-zero GPU platforms available",
++)
+ 
+ filter_strings = [
+-    pytest.param("level_zero:gpu:0", marks=skip_no_gpu),
++    pytest.param("level_zero:gpu:0", marks=skip_no_level_zero),
+     pytest.param("opencl:gpu:0", marks=skip_no_gpu),
+     pytest.param("opencl:cpu:0", marks=skip_no_cpu),
+ ]
+
+From 2b59d0d035ffd0ee2ffac1e131617fe5c9dd6aab Mon Sep 17 00:00:00 2001
+From: "elena.totmenina" <elena.totmenina@intel.com>
+Date: Tue, 30 Nov 2021 14:12:25 +0300
+Subject: [PATCH 2/2] Add opencl
+
+---
+ numba_dppy/tests/test_with_context.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/numba_dppy/tests/test_with_context.py b/numba_dppy/tests/test_with_context.py
+index 3068a7890..518055da6 100644
+--- a/numba_dppy/tests/test_with_context.py
++++ b/numba_dppy/tests/test_with_context.py
+@@ -25,10 +25,12 @@
+ from ._helper import assert_auto_offloading
+ 
+ skip_no_gpu = pytest.mark.skipif(
+-    not _helper.has_gpu_queues(), reason="No GPU platforms available"
++    not _helper.has_gpu_queues("opencl"),
++    reason="No opencl GPU platforms available",
+ )
+ skip_no_cpu = pytest.mark.skipif(
+-    not _helper.has_cpu_queues(), reason="No CPU platforms available"
++    not _helper.has_cpu_queues("opencl"),
++    reason="No opencl CPU platforms available",
+ )
+ skip_no_level_zero = pytest.mark.skipif(
+     not _helper.has_gpu_queues("level_zero"),

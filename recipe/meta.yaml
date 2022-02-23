@@ -9,6 +9,10 @@ package:
 source:
     url: https://github.com/IntelPython/{{ name }}/archive/{{ version }}.tar.gz
     sha256: {{ sha256 }}
+    patches:
+        # removed when updating to v0.18.0, as this was merged for that release
+        # https://github.com/IntelPython/numba-dppy/pull/646
+        - patches/0001-backport-level-zero-context-skip.patch
 
 build:
     number: 0
@@ -18,6 +22,8 @@ requirements:
     build:
         - {{ compiler('cxx') }}
         - {{ compiler('dpcpp') }}       # [not osx]
+        - patch         # [unix]
+        - m2-patch      # [win]
     host:
         - python
         - setuptools
