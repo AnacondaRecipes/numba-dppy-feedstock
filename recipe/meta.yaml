@@ -17,6 +17,14 @@ source:
 build:
     number: 0
     skip: True  # [not (x86_64 and (linux or win))]
+    missing_dso_whitelist:                      # [win]
+        # windows DSO checks seems to have a problem with this file.
+        # it gets loaded via directly via file name + dpctl.__file__ path:
+        # https://github.com/IntelPython/numba-dppy/blob/0.17.4/numba_dppy/initialize.py#L46-L49
+        - "$RPATH/DPCTLSyclInterface.dll"       # [win]
+    ignore_run_exports:                         # [win]
+        # it does not have any run_exports but it is needed, see above..
+        - dpctl                                 # [win]
 
 requirements:
     build:
